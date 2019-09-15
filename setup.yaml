@@ -1,0 +1,23 @@
+Description: Roles and Resources needed to run the deployment of this site
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+  SAMBucket:
+    Type: AWS::S3::Bucket
+    Properties: 
+      BucketEncryption: 
+        ServerSideEncryptionConfiguration: 
+          - 
+            ServerSideEncryptionByDefault: 
+              SSEAlgorithm: AES256
+      BucketName: !Sub sam-${AWS::AccountId}-${AWS::Region}
+      LifecycleConfiguration: 
+        Rules:
+          - 
+            ExpirationInDays: 7
+            Status: Enabled
+      PublicAccessBlockConfiguration: 
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
