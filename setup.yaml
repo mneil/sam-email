@@ -1,6 +1,11 @@
 Description: Roles and Resources needed to run the deployment of this site
 AWSTemplateFormatVersion: 2010-09-09
 
+Parameters:
+  UserName:
+    Description: The friendly name of the user (Not Arn)
+    Type: String
+
 Resources:
   SAMBucket:
     Type: AWS::S3::Bucket
@@ -21,3 +26,17 @@ Resources:
         BlockPublicPolicy: True
         IgnorePublicAcls: True
         RestrictPublicBuckets: True
+
+  SamRole:
+    Type: AWS::IAM::ManagedPolicy
+    Properties: 
+      Description: SAM Policy to allow deployment of resources
+      Path: /
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: s3:PutObject
+            Resource: !Sub ${SAMBucket.Arn}/*
+      Users:
+        - !Ref UserName
