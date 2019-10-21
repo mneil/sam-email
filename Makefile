@@ -1,11 +1,15 @@
 STACK_NAME=aws-sam-getting-started
+ACCOUNT_ID=788653304537
 
-all: test package deploy get-url
+all: build test package deploy get-url
+
+build:
+	sam build
 
 package:
 	sam package \
 		--output-template packaged.yaml \
-		--s3-bucket sam-788653304537-${AWS_REGION}
+		--s3-bucket sam-$(ACCOUNT_ID)-${AWS_REGION}
 
 deploy:
 	sam deploy \
@@ -18,7 +22,6 @@ get-url:
 		--stack-name $(STACK_NAME) \
 		--region ${AWS_REGION} \
 		--query "Stacks[*].Outputs[].{Key:OutputKey,Value:OutputValue}"
-		# --region ${AWS_REGION} --query "Stacks[].Outputs[?OutputKey==`HelloWorldApi`]"
 
 test:
 	# sam local start-api
